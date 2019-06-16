@@ -2,11 +2,12 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:tutorial_infinite_list/bloc/bloc.dart';
+import 'package:tutorial_infinite_list/bloc/post.event.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
-
-import './bloc.dart';
 import '../model/post.model.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
