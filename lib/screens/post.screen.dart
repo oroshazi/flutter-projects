@@ -15,7 +15,9 @@ class PostScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Text(post.title),
-          Text(post.body),
+          Card(
+            child: Text(post.body),
+          ),
           Text(post.id.toString()),
         ],
       ),
