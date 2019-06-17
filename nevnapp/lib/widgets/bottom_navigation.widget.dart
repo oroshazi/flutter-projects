@@ -12,12 +12,12 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static  List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
+    MyHomePage(),
     Text(
       'Index 1: Business',
       style: optionStyle,
     ),
-    MyHomePage(), 
     Text(
       'Index 2: School',
       style: optionStyle,
@@ -49,10 +49,10 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
             icon: Icon(Icons.business),
             title: Text('Business'),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            title: Text('School'),
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.school),
+          //   title: Text('School'),
+          // ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],

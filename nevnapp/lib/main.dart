@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:nevnapp/data/events.data.dart';
 import 'package:nevnapp/widgets/bottom_navigation.widget.dart';
 import 'package:nevnapp/widgets/event_list.widget.dart';
 import 'package:table_calendar/table_calendar.dart';
-import './data/name_days.data.dart';
+import './data/holidays.data.dart';
 import 'package:date_utils/date_utils.dart';
 
 void main() {
@@ -17,15 +18,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: BottomNavigation(),
@@ -50,69 +42,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   List _selectedEvents;
   AnimationController _controller;
 
-  Map<DateTime, List> nameDays = NameDays().returnNamedays();
+  Map<DateTime, List> holidays = Holidays().holidayList;
 
   @override
   void initState() {
     super.initState();
     _selectedDay = DateTime.now();
-    _events = {
-      _selectedDay.subtract(Duration(days: 30)): [
-        'Event A0',
-        'Event B0',
-        'Event C0'
-      ],
-      _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
-      _selectedDay.subtract(Duration(days: 20)): [
-        'Event A2',
-        'Event B2',
-        'Event C2',
-        'Event D2'
-      ],
-      _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
-      _selectedDay.subtract(Duration(days: 10)): [
-        'Event A4',
-        'Event B4',
-        'Event C4'
-      ],
-      _selectedDay.subtract(Duration(days: 4)): [
-        'Event A5',
-        'Event B5',
-        'Event C5'
-      ],
-      _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
-      _selectedDay.add(Duration(days: 1)): [
-        'Event A8',
-        'Event B8',
-        'Event C8',
-        'Event D8'
-      ],
-      _selectedDay.add(Duration(days: 3)):
-          Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-      _selectedDay.add(Duration(days: 7)): [
-        'Event A10',
-        'Event B10',
-        'Event C10'
-      ],
-      _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
-      _selectedDay.add(Duration(days: 17)): [
-        'Event A12',
-        'Event B12',
-        'Event C12',
-        'Event D12'
-      ],
-      _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
-      _selectedDay.add(Duration(days: 26)): [
-        'Event A14',
-        'Event B14',
-        'Event C14'
-      ],
-    };
+    _events = Events().hu;
 
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
-    _visibleHolidays = nameDays;
+    _visibleHolidays = holidays;
 
     _controller = AnimationController(
       vsync: this,
@@ -141,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       );
 
       _visibleHolidays = Map.fromEntries(
-        nameDays.entries.where(
+        holidays.entries.where(
           (entry) =>
               entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
               entry.key.isBefore(last.add(const Duration(days: 1))),
@@ -161,13 +101,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         children: <Widget>[
           // Switch out 2 lines below to play with TableCalendar's settings
           //-----------------------
-          _buildTableCalendar(),
-          // _buildTableCalendarWithBuilders(),
-          const SizedBox(height: 8.0),
           Expanded(
               child: EventList(
             selectedEvents: _selectedEvents,
           )),
+          _buildTableCalendarWithBuilders(),
+          // _buildTableCalendarWithBuilders(),
+          const SizedBox(height: 8.0),
         ],
       ),
       // bottomNavigationBar: BottomNavigation(),
@@ -210,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   // More advanced TableCalendar configuration (using Builders & Styles)
   Widget _buildTableCalendarWithBuilders() {
     return TableCalendar(
-      locale: 'pl_PL',
+      locale: 'en_US',
       events: _visibleEvents,
       holidays: _visibleHolidays,
       initialCalendarFormat: CalendarFormat.month,
@@ -329,5 +269,4 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       color: Colors.blueGrey[800],
     );
   }
-
 }

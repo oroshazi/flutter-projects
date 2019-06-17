@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nevnapp/widgets/event_item.widget.dart';
 
 class EventList extends StatelessWidget {
-  List selectedEvents;
+  final List selectedEvents;
   EventList({this.selectedEvents});
 
   @override
