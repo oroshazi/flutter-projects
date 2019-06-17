@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nevnapp/screens/calendar.screen.dart';
+import 'package:nevnapp/screens/favorites.screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -14,10 +15,7 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
     CalendarScreen(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    FavoritesScreen(),
     Text(
       'Index 2: School',
       style: optionStyle,
@@ -39,12 +37,12 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
+            icon: Icon(Icons.calendar_today),
+            title: Text(''),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            title: Text('Business'),
+            icon: Icon(Icons.star),
+            title: Text(''),
           ),
         ],
         currentIndex: _selectedIndex,

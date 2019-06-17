@@ -129,7 +129,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
       holidays: _visibleHolidays,
       initialCalendarFormat: CalendarFormat.month,
       formatAnimation: FormatAnimation.slide,
-      startingDayOfWeek: StartingDayOfWeek.sunday,
+      startingDayOfWeek: StartingDayOfWeek.monday,
       availableGestures: AvailableGestures.all,
       availableCalendarFormats: const {
         CalendarFormat.month: '',
@@ -137,7 +137,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
       },
       calendarStyle: CalendarStyle(
         outsideDaysVisible: false,
-        weekendStyle: TextStyle().copyWith(color: Colors.blue[800]),
+        weekendStyle: TextStyle().copyWith(color: Colors.green),
         holidayStyle: TextStyle().copyWith(color: Colors.blue[800]),
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
