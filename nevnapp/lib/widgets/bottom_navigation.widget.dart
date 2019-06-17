@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nevnapp/main.dart';
+import 'package:nevnapp/screens/calendar.screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    MyHomePage(),
+    CalendarScreen(),
     Text(
       'Index 1: Business',
       style: optionStyle,
@@ -33,9 +33,6 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('BottomNavigationBar Sample'),
-      // ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -49,10 +46,6 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
             icon: Icon(Icons.business),
             title: Text('Business'),
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.school),
-          //   title: Text('School'),
-          // ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
