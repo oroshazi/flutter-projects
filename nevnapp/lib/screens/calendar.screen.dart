@@ -14,7 +14,8 @@ class CalendarScreen extends StatefulWidget {
   _CalendarScreen createState() => _CalendarScreen();
 }
 
-class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixin {
+class _CalendarScreen extends State<CalendarScreen>
+    with TickerProviderStateMixin {
   DateTime _selectedDay;
   Map<DateTime, List> _events;
   Map<DateTime, List> _visibleEvents;
@@ -22,13 +23,16 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   List _selectedEvents;
   AnimationController _controller;
 
+  int _year;
+
   Map<DateTime, List> holidays = Holidays().holidayList;
 
   @override
   void initState() {
     super.initState();
+    _year = DateTime.now().year;
     _selectedDay = DateTime.now();
-    _events = Events().hu;
+    _events = Events(year: _year).hu;
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
     _visibleHolidays = holidays;
@@ -48,6 +52,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {
+    print("_onVisibleDaysChanged: first:" + first.year.toString());
+    print("_onVisibleDaysChanged: first:" + last.year.toString());
     setState(() {
       _visibleEvents = Map.fromEntries(
         _events.entries.where(
@@ -64,6 +70,10 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
               entry.key.isBefore(last.add(const Duration(days: 1))),
         ),
       );
+
+      _events = Events(year: first.year).hu;
+
+      // if(first.year > _events.getYear)
     });
   }
 

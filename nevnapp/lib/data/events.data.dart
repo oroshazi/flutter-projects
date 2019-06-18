@@ -1,9 +1,13 @@
+import 'package:flutter/widgets.dart';
+
 class Events {
-  final Map<DateTime, List> _eventsHu = {
-    DateTime(2019, 6, 19): ["thing"],
-  };
+  final int year;
+
+  Events({@required this.year});
 
   Map<DateTime, List> get hu {
-    return _eventsHu;
+    return {
+      DateTime(year, 6, 19): ["thing"],
+    };
   }
 }
