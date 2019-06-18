@@ -22,9 +22,7 @@ class _CalendarScreen extends State<CalendarScreen>
   Map<DateTime, List> _visibleHolidays;
   List _selectedEvents;
   AnimationController _controller;
-
   int _year;
-
   Map<DateTime, List> holidays = Holidays().holidayList;
 
   @override
@@ -71,9 +69,8 @@ class _CalendarScreen extends State<CalendarScreen>
         ),
       );
 
+      // Update year in Events, when the year changes in the calendar.
       _events = Events(year: first.year).hu;
-
-      // if(first.year > _events.getYear)
     });
   }
 
@@ -83,53 +80,16 @@ class _CalendarScreen extends State<CalendarScreen>
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          // Switch out 2 lines below to play with TableCalendar's settings
-          //-----------------------
           Expanded(
               child: EventList(
             selectedEvents: _selectedEvents,
           )),
           _buildTableCalendarWithBuilders(),
-          // _buildTableCalendarWithBuilders(),
           const SizedBox(height: 8.0),
         ],
       ),
-      // bottomNavigationBar: BottomNavigation(),
     );
   }
-
-  // Simple TableCalendar configuration (using Styles)
-  // Widget _buildTableCalendar() {
-  //   return TableCalendar(
-  //     locale: 'en_US',
-  //     events: _visibleEvents,
-  //     holidays: _visibleHolidays,
-  //     initialCalendarFormat: CalendarFormat.week,
-  //     formatAnimation: FormatAnimation.slide,
-  //     startingDayOfWeek: StartingDayOfWeek.monday,
-  //     availableGestures: AvailableGestures.all,
-  //     availableCalendarFormats: const {
-  //       CalendarFormat.month: 'Month',
-  //       CalendarFormat.twoWeeks: '2 weeks',
-  //       CalendarFormat.week: 'Week',
-  //     },
-  //     calendarStyle: CalendarStyle(
-  //       selectedColor: Colors.deepOrange[400],
-  //       todayColor: Colors.deepOrange[200],
-  //       markersColor: Colors.brown[700],
-  //     ),
-  //     headerStyle: HeaderStyle(
-  //       formatButtonTextStyle:
-  //           TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-  //       formatButtonDecoration: BoxDecoration(
-  //         color: Colors.deepOrange[400],
-  //         borderRadius: BorderRadius.circular(16.0),
-  //       ),
-  //     ),
-  //     onDaySelected: _onDaySelected,
-  //     onVisibleDaysChanged: _onVisibleDaysChanged,
-  //   );
-  // }
 
   // More advanced TableCalendar configuration (using Builders & Styles)
   Widget _buildTableCalendarWithBuilders() {
@@ -222,6 +182,8 @@ class _CalendarScreen extends State<CalendarScreen>
   }
 
   Widget _buildEventsMarker(DateTime date, List events) {
+    // TODO: Only mark events if the person is "liked"
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
