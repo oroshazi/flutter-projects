@@ -22,7 +22,12 @@ class EventItem extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Icon(Icons.favorite_border),
-        title:  Text(event.toString()),
+        subtitle: Text(event.toString()),
+        title: Text(
+          event.toString(),
+          style: TextStyle(fontSize: 50),
+          textAlign: TextAlign.justify,
+        ),
         // subtitle: event.,
         onTap: () => print('$event tapped!'),
       ),
