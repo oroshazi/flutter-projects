@@ -80,9 +80,12 @@ class _CalendarScreen extends State<CalendarScreen>
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Expanded(
-              child: EventList(
-            selectedEvents: _selectedEvents,
+          Flexible(
+              child: Center(
+
+            child: EventList(
+              selectedEvents: _selectedEvents,
+            ),
           )),
           _buildTableCalendarWithBuilders(),
           const SizedBox(height: 8.0),
