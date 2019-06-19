@@ -21,7 +21,12 @@ class EventItem extends StatelessWidget {
 
     return Card(
       child: ListTile(
-        leading: Icon(Icons.favorite_border),
+        leading: Icon(
+          Icons.favorite_border,
+          size: 40,
+          color: Colors.red,
+        ),
+
         subtitle: Text(event.toString()),
         title: Text(
           event.toString(),
