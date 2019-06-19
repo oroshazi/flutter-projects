@@ -39,9 +39,10 @@ class _BottomNaviagtionState extends State<BottomNavigation> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             title: Text(''),
+            
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
+            icon: Icon(Icons.search),
             title: Text(''),
           ),
         ],

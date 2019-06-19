@@ -8,6 +8,7 @@ class EventList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+        shrinkWrap: true,
         children:
             selectedEvents.map((event) => EventItem(event: event)).toList());
   }
