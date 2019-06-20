@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:nevnapp/repository/database_creator.dart';
+import 'package:nevnapp/repository/repository_service_namedays.dart';
 import 'package:nevnapp/widgets/bottom_navigation.widget.dart';
 
-void main() {
+void main() async {
+  await DatabaseCreator().initDatabase();
   initializeDateFormatting().then((_) => runApp(MyApp()));
+  final dbContent = await RepositoryServiceNamedays.getAll(); 
+
+  print(dbContent);
 }
 
 class MyApp extends StatelessWidget {
@@ -19,5 +25,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

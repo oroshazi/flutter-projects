@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
+import '../repository/database_creator.dart';
 
 class Nameday {
-  final int id;
-  final int day;
-  final int month;
-  final bool isFavorite;
-  final String name;
+  int id;
+  int day;
+  int month;
+  int isFavorite;
+  String name;
 
   Nameday(
       {@required this.id,
@@ -13,6 +14,14 @@ class Nameday {
       @required this.day,
       @required this.month,
       @required this.name});
+
+  Nameday.fromJSON(Map<String, dynamic> json) {
+    this.id = json[DatabaseCreator.id];
+    this.name = json[DatabaseCreator.name];
+    this.day = json[DatabaseCreator.day];
+    this.month = json[DatabaseCreator.month];
+    this.isFavorite = json[DatabaseCreator.isFavorite];
+  }
 
   Map<String, dynamic> toMap() {
     return {
