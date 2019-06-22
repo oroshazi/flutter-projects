@@ -6,8 +6,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:date_utils/date_utils.dart';
 
 class CalendarScreen extends StatefulWidget {
-  // MyHomePage({Key key, this.title = "default"}) : super(key: key);
-
   final String title = 'Flutter Demo Home Page';
 
   @override
@@ -171,7 +169,7 @@ class _CalendarScreen extends State<CalendarScreen>
         markersBuilder: (context, date, events, holidays) {
           final children = <Widget>[];
 
-          if (events.isNotEmpty) {
+          if (events.isNotEmpty && events[0].isFavorite == 1) {
             children.add(
               Positioned(
                 right: 1,
@@ -203,12 +201,10 @@ class _CalendarScreen extends State<CalendarScreen>
   }
 
   Widget _buildEventsMarker(DateTime date, List events) {
-    // TODO: Only mark events if the person is "liked"
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
+        shape: BoxShape.circle,
         color: Utils.isSameDay(date, _selectedDay)
             ? Colors.brown[500]
             : Utils.isSameDay(date, DateTime.now())
