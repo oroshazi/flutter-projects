@@ -6,8 +6,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:date_utils/date_utils.dart';
 
 class CalendarScreen extends StatefulWidget {
-  // MyHomePage({Key key, this.title = "default"}) : super(key: key);
-
   final String title = 'Flutter Demo Home Page';
 
   @override
@@ -18,27 +16,46 @@ class _CalendarScreen extends State<CalendarScreen>
     with TickerProviderStateMixin {
   DateTime _selectedDay;
   Map<DateTime, List> _events;
-  Map<DateTime, List> _visibleEvents;
+  // Map<DateTime, List> _visibleEvents;
   Map<DateTime, List> _visibleHolidays;
   List _selectedEvents;
   AnimationController _controller;
-  int _year;
+  int year;
+  bool _loading;
   Map<DateTime, List> holidays = Holidays().holidayList;
 
   @override
   void initState() {
     super.initState();
-    _year = DateTime.now().year;
-    _selectedDay = DateTime.now();
-    _events = Events(year: _year).hu;
-    _selectedEvents = _events[_selectedDay] ?? [];
-    _visibleEvents = _events;
-    _visibleHolidays = holidays;
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _controller.forward();
+
+    _loading = true;
+    year = DateTime.now().year;
+    _selectedDay =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+    Events(year: year).nameDays().then((data) {
+      _events = data;
+      // final filter = _events.forEach((key, value) {
+      //   List<dynamic> list = List(); 
+      //   if (key == _selectedDay)  {
+      //     list.add(value); 
+      //   }
+      //   return list; 
+      // }); 
+      _selectedEvents = _events[_selectedDay];
+    }).then((_) {
+      setState(() {
+        // _visibleEvents = _events;
+        _visibleHolidays = holidays;
+        _controller = AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 400),
+        );
+        _controller.forward();
+      });
+    }).then((_) {
+      _loading = false;
+    });
   }
 
   void _onDaySelected(DateTime day, List events) {
@@ -50,47 +67,53 @@ class _CalendarScreen extends State<CalendarScreen>
 
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {
-    print("_onVisibleDaysChanged: first:" + first.year.toString());
-    print("_onVisibleDaysChanged: first:" + last.year.toString());
     setState(() {
-      _visibleEvents = Map.fromEntries(
-        _events.entries.where(
-          (entry) =>
-              entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-              entry.key.isBefore(last.add(const Duration(days: 1))),
-        ),
-      );
+      year = first.year;
 
-      _visibleHolidays = Map.fromEntries(
-        holidays.entries.where(
-          (entry) =>
-              entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-              entry.key.isBefore(last.add(const Duration(days: 1))),
-        ),
-      );
+      // Get namedays from database when changing visibility.
+      Events(year: year).nameDays().then((data) {
+        _events = data;
+      }).then((_) {
+        // _visibleEvents = Map.fromEntries(
+        //   _events.entries.where(
+        //     (entry) =>
+        //         entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
+        //         entry.key.isBefore(last.add(const Duration(days: 1))),
+        //   ),
+        // );
+
+        _visibleHolidays = Map.fromEntries(
+          holidays.entries.where(
+            (entry) =>
+                entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
+                entry.key.isBefore(last.add(const Duration(days: 1))),
+          ),
+        );
+      });
 
       // Update year in Events, when the year changes in the calendar.
-      _events = Events(year: first.year).hu;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Flexible(
-              child: Center(
-
-            child: EventList(
-              selectedEvents: _selectedEvents,
+      body: (_loading != false)
+          ? CircularProgressIndicator()
+          : Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Flexible(
+                    child: Center(
+                  child: EventList(
+                    selectedEvents: _selectedEvents,
+                    selectedYear: year,
+                  ),
+                )),
+                _buildTableCalendarWithBuilders(),
+                const SizedBox(height: 8.0),
+              ],
             ),
-          )),
-          _buildTableCalendarWithBuilders(),
-          const SizedBox(height: 8.0),
-        ],
-      ),
     );
   }
 
@@ -98,7 +121,7 @@ class _CalendarScreen extends State<CalendarScreen>
   Widget _buildTableCalendarWithBuilders() {
     return TableCalendar(
       locale: 'en_US',
-      events: _visibleEvents,
+      events: _events,
       holidays: _visibleHolidays,
       initialCalendarFormat: CalendarFormat.month,
       formatAnimation: FormatAnimation.slide,
@@ -118,7 +141,7 @@ class _CalendarScreen extends State<CalendarScreen>
       ),
       headerStyle: HeaderStyle(
         centerHeaderTitle: true,
-        formatButtonVisible: false,
+        formatButtonVisible: true,
       ),
       builders: CalendarBuilders(
         selectedDayBuilder: (context, date, _) {
@@ -153,7 +176,7 @@ class _CalendarScreen extends State<CalendarScreen>
         markersBuilder: (context, date, events, holidays) {
           final children = <Widget>[];
 
-          if (events.isNotEmpty) {
+          if (events.isNotEmpty && events[0].isFavorite == 1) {
             children.add(
               Positioned(
                 right: 1,
@@ -185,12 +208,10 @@ class _CalendarScreen extends State<CalendarScreen>
   }
 
   Widget _buildEventsMarker(DateTime date, List events) {
-    // TODO: Only mark events if the person is "liked"
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
+        shape: BoxShape.circle,
         color: Utils.isSameDay(date, _selectedDay)
             ? Colors.brown[500]
             : Utils.isSameDay(date, DateTime.now())
@@ -201,7 +222,7 @@ class _CalendarScreen extends State<CalendarScreen>
       height: 16.0,
       child: Center(
         child: Text(
-          '${events.length}',
+          '${events[0].isFavorite}',
           style: TextStyle().copyWith(
             color: Colors.white,
             fontSize: 12.0,

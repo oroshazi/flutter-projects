@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:nevnapp/repository/database_creator.dart';
 import 'package:nevnapp/widgets/bottom_navigation.widget.dart';
 
-void main() {
+void main() async {
+  await DatabaseCreator().initDatabase();
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
@@ -19,5 +21,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
