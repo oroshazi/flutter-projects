@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:nevnapp/models/nameday.dart';
 import 'package:nevnapp/repository/repository_service_namedays.dart';
 
 class EventItem extends StatelessWidget {
   final Nameday event;
+  final int year;
 
-  EventItem({this.event});
+  EventItem({this.event, this.year});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class EventItem extends StatelessWidget {
           size: 40,
           color: Colors.red,
         ),
+        subtitle: Text(formatDateTime(DateTime(year, event.month, event.day))),
         title: Text(
           event.name.toString(),
           style: TextStyle(fontSize: 50),
@@ -28,4 +31,6 @@ class EventItem extends StatelessWidget {
       ),
     );
   }
+
+  String formatDateTime(DateTime date) => new DateFormat("MMMM d").format(date);
 }

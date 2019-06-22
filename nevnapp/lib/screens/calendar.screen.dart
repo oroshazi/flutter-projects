@@ -75,6 +75,9 @@ class _CalendarScreen extends State<CalendarScreen>
       );
 
       // Update year in Events, when the year changes in the calendar.
+      _year = first.year; 
+      
+      // Get namedays from database when changing visibility.  
       Events(year: _year).nameDays().then((data) {
         _events = data;
       });
@@ -93,6 +96,7 @@ class _CalendarScreen extends State<CalendarScreen>
                     child: Center(
                   child: EventList(
                     selectedEvents: _selectedEvents,
+                    selectedYear: _year,
                   ),
                 )),
                 _buildTableCalendarWithBuilders(),
