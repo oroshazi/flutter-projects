@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:nevnapp/repository/sql/namedays_hu.sql.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -45,11 +46,9 @@ class DatabaseCreator {
       $day, 
       $month, 
       $isFavorite
-    ) 
-    VALUES 
-      (1, "Pista", 20, 6, 1),
-      (2, "Pista2", 21, 6, 0),
-      (3, "Pista3", 22, 6, 0)
+    ) VALUES
+    ${nameDayValuesHu["January"]}
+    ${nameDayValuesHu["February"]}
       ''';
 
     await db.execute(insertInitialData);
@@ -60,7 +59,7 @@ class DatabaseCreator {
     final path = join(databasebPath, databaseName);
 
     if (await Directory(dirname(path)).exists()) {
-      // await deleteDatabase(path);
+      await deleteDatabase(path);
     } else {
       await Directory(dirname(path)).create(recursive: true);
     }

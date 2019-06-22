@@ -35,6 +35,13 @@ class _CalendarScreen extends State<CalendarScreen>
 
     Events(year: year).nameDays().then((data) {
       _events = data;
+      // final filter = _events.forEach((key, value) {
+      //   List<dynamic> list = List(); 
+      //   if (key == _selectedDay)  {
+      //     list.add(value); 
+      //   }
+      //   return list; 
+      // }); 
       _selectedEvents = _events[_selectedDay];
     }).then((_) {
       setState(() {
