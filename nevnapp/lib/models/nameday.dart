@@ -32,4 +32,11 @@ class Nameday {
       "name": this.name,
     };
   }
+
+  printOut() {
+    print('id: ${this.id}' +
+        " day: ${this.day}" +
+        " month: ${this.month}" +
+        " name: ${this.name}");
+  }
 }

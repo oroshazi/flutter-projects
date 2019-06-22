@@ -28,11 +28,18 @@ class _CalendarScreen extends State<CalendarScreen>
   @override
   void initState() {
     super.initState();
+
     _year = DateTime.now().year;
     _selectedDay = DateTime.now();
-    _events = Events(year: _year).hu;
-    _selectedEvents = _events[_selectedDay] ?? [];
-    _visibleEvents = _events;
+
+    Events(year: _year).nameDays().then((data) {
+      setState(() {
+        _events = data;
+        _selectedEvents = _events[_selectedDay] ?? [];
+        _visibleEvents = _events;
+      });
+    });
+
     _visibleHolidays = holidays;
     _controller = AnimationController(
       vsync: this,
@@ -50,8 +57,6 @@ class _CalendarScreen extends State<CalendarScreen>
 
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {
-    print("_onVisibleDaysChanged: first:" + first.year.toString());
-    print("_onVisibleDaysChanged: first:" + last.year.toString());
     setState(() {
       _visibleEvents = Map.fromEntries(
         _events.entries.where(
@@ -70,27 +75,30 @@ class _CalendarScreen extends State<CalendarScreen>
       );
 
       // Update year in Events, when the year changes in the calendar.
-      _events = Events(year: first.year).hu;
+      Events(year: _year).nameDays().then((data) {
+        _events = data;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Flexible(
-              child: Center(
-
-            child: EventList(
-              selectedEvents: _selectedEvents,
+      body: _events == null
+          ? CircularProgressIndicator()
+          : Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Flexible(
+                    child: Center(
+                  child: EventList(
+                    selectedEvents: _selectedEvents,
+                  ),
+                )),
+                _buildTableCalendarWithBuilders(),
+                const SizedBox(height: 8.0),
+              ],
             ),
-          )),
-          _buildTableCalendarWithBuilders(),
-          const SizedBox(height: 8.0),
-        ],
-      ),
     );
   }
 
@@ -201,7 +209,7 @@ class _CalendarScreen extends State<CalendarScreen>
       height: 16.0,
       child: Center(
         child: Text(
-          '${events.length}',
+          '${events[0].isFavorite}',
           style: TextStyle().copyWith(
             color: Colors.white,
             fontSize: 12.0,

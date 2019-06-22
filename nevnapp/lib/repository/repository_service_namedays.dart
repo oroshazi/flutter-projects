@@ -7,8 +7,6 @@ class RepositoryServiceNamedays {
     final sql = '''SELECT * FROM ${DatabaseCreator.nameDayTableHu}''';
     final data = await db.rawQuery(sql);
 
-    print(data); 
-
     List<Nameday> nameDaysHu = List();
 
     for (final node in data) {
@@ -16,5 +14,17 @@ class RepositoryServiceNamedays {
       nameDaysHu.add(nameDay);
     }
     return nameDaysHu;
+  }
+
+  static void toggleFavorite(Nameday nameDay) async {
+    final sql = '''UPDATE ${DatabaseCreator.nameDayTableHu}
+    SET ${DatabaseCreator.isFavorite} = ?
+    WHERE ${DatabaseCreator.name} = ?
+    ''';
+
+    List<dynamic> params = [nameDay.isFavorite == 1 ? 0 : 1, nameDay.name];
+    final result = await db.rawUpdate(sql, params);
+
+    DatabaseCreator.databaseLog('Update todo', sql, null, result, params);
   }
 }

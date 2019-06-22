@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
+import 'package:nevnapp/models/nameday.dart';
+import 'package:nevnapp/repository/repository_service_namedays.dart';
 
 class Events {
   final int year;
@@ -50,5 +54,42 @@ class Events {
       DateTime(year, 8, 13): ["Anett, Antal"],
       // DateTime(year, 6, 2): ["Kármen"],
     };
+  }
+
+  // Future <Map<DateTime, Nameday>> get nameDays async {
+  //   final nameDays = await RepositoryServiceNamedays.getAll();
+
+  //   List<Nameday> nameDayList = List();
+
+  //   for (final node in nameDays) {
+  //     final nameDays = Nameday.fromJSON(node.toMap());
+  //     nameDayList.add(nameDays);
+  //   }
+
+  //   return nameDayList;
+  // }
+
+  Future<Map<DateTime, List<Nameday>>> nameDays() async {
+    final nameDays = await RepositoryServiceNamedays.getAll();
+
+    Map<DateTime, List<Nameday>> nameDayList = Map<DateTime, List<Nameday>>();
+
+    for (final i in nameDays) {
+      final nameDay = Nameday.fromJSON(i.toMap());
+
+      nameDayList[DateTime(year, nameDay.month, nameDay.day)] = [
+        Nameday(
+            day: nameDay.day,
+            month: nameDay.month,
+            name: nameDay.name,
+            id: nameDay.id,
+            isFavorite: nameDay.isFavorite)
+      ];
+      // nameDayList.add(nameDays);
+    }
+
+    print(nameDayList); 
+    
+    return nameDayList;
   }
 }

@@ -39,14 +39,20 @@ class DatabaseCreator {
     )''';
     await db.execute(sql);
 
-    final insertInitialData = ''' 
-    INSERT INTO $nameDayTableHu (
-      $id, $name, $day, $month, $isFavorite
+    final insertInitialData = '''INSERT INTO $nameDayTableHu (
+      $id, 
+      $name, 
+      $day, 
+      $month, 
+      $isFavorite
     ) 
     VALUES 
-      (1, "Pista", 20, 6, 1)''';
+      (1, "Pista", 20, 6, 1),
+      (2, "Pista2", 21, 6, 0),
+      (3, "Pista3", 22, 6, 0)
+      ''';
 
-    await db.execute(insertInitialData); 
+    await db.execute(insertInitialData);
   }
 
   Future<String> getDatabasePath(String databaseName) async {
@@ -54,7 +60,7 @@ class DatabaseCreator {
     final path = join(databasebPath, databaseName);
 
     if (await Directory(dirname(path)).exists()) {
-      await deleteDatabase(path);
+      // await deleteDatabase(path);
     } else {
       await Directory(dirname(path)).create(recursive: true);
     }
