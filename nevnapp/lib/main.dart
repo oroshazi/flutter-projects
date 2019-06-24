@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       ),
       home: BottomNavigation(),
       routes: {
-        ROUTES.settings: (BuildContext context) => SettingsScreen(),
+        ROUTES.SETTINGS: (BuildContext context) => SettingsScreen(),
       },
     );
   }

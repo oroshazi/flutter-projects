@@ -62,7 +62,8 @@ class _CalendarScreen extends State<CalendarScreen>
     setState(() {
       // Update year in Events, when the year changes in the calendar.
       year = first.year;
-
+      // when changing month, change focus will be set on the last day visible.
+      // TODO:Think of a better solution
       _selectedDay = last;
 
       // Get namedays from database when changing visibility.

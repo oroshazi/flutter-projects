@@ -21,6 +21,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text("change language"),
           Text("change theme"),
           Text("change start of the week"),
+          Text("Notification settings!!")
         ],
       ),
     );
