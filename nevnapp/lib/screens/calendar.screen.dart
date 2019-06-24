@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nevnapp/constansts/routes.dart';
 import 'package:nevnapp/data/events.data.dart';
 import 'package:nevnapp/data/holidays.data.dart';
 import 'package:nevnapp/widgets/event_list.widget.dart';
@@ -62,6 +63,8 @@ class _CalendarScreen extends State<CalendarScreen>
       // Update year in Events, when the year changes in the calendar.
       year = first.year;
 
+      _selectedDay = last;
+
       // Get namedays from database when changing visibility.
       Events(year: year).nameDays().then((data) {
         _events = data;
@@ -84,7 +87,7 @@ class _CalendarScreen extends State<CalendarScreen>
         //transparent Appbar
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        // leading: Icon(Icons.settings, color: Colors.black, ),
+        leading: _buildSettingsButton(),
         actions: <Widget>[
           _buildBackToTodayButton(),
         ],
@@ -241,6 +244,16 @@ class _CalendarScreen extends State<CalendarScreen>
             DateTime.now().year, DateTime.now().month, DateTime.now().day);
         _onDaySelected(_today, _events[_today]);
         _controller.forward(from: 0.0);
+      },
+    );
+  }
+
+  Widget _buildSettingsButton() {
+    return IconButton(
+      icon: Icon(Icons.settings),
+      color: Colors.grey,
+      onPressed: () {
+        Navigator.pushNamed(context, ROUTES.settings);
       },
     );
   }
