@@ -59,7 +59,7 @@ class DatabaseCreator {
     final path = join(databasebPath, databaseName);
 
     if (await Directory(dirname(path)).exists()) {
-      await deleteDatabase(path);
+      // await deleteDatabase(path);
     } else {
       await Directory(dirname(path)).create(recursive: true);
     }

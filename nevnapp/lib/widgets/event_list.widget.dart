@@ -9,7 +9,7 @@ class EventList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("EventList: "+ selectedEvents.toString());
+    // print("EventList: "+ selectedEvents.toString());
     return ListView(
         shrinkWrap: true,
         children: selectedEvents != null
