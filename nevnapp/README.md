@@ -17,4 +17,5 @@ samples, guidance on mobile development, and a full API reference.
 
 ## TODO
 
-- Add "Today" button, to the top right, which automatically focuses the day on today.
+- (/) Add "Today" button, to the top right, which automatically focuses the day on today.
+- Today button should also focus when Today is not visible. 
