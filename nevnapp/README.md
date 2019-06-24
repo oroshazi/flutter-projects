@@ -18,4 +18,13 @@ samples, guidance on mobile development, and a full API reference.
 ## TODO
 
 - (/) Add "Today" button, to the top right, which automatically focuses the day on today.
-- Today button should also focus when Today is not visible. 
+- (/) Today button should also focus when Today is not visible. 
+- Settings: 
+    - Change color theme
+    - Change language
+    - Change start of week
+    - Change Notification settings
+        - Turn in/off
+        - When to notify
+- Add small pop-up when a user adds a name to the favorites
+- Add name days of other countries too. 
