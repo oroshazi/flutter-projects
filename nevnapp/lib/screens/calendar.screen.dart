@@ -16,7 +16,6 @@ class _CalendarScreen extends State<CalendarScreen>
     with TickerProviderStateMixin {
   DateTime _selectedDay;
   Map<DateTime, List> _events;
-  // Map<DateTime, List> _visibleEvents;
   Map<DateTime, List> _visibleHolidays;
   List _selectedEvents;
   AnimationController _controller;
@@ -35,17 +34,9 @@ class _CalendarScreen extends State<CalendarScreen>
 
     Events(year: year).nameDays().then((data) {
       _events = data;
-      // final filter = _events.forEach((key, value) {
-      //   List<dynamic> list = List(); 
-      //   if (key == _selectedDay)  {
-      //     list.add(value); 
-      //   }
-      //   return list; 
-      // }); 
       _selectedEvents = _events[_selectedDay];
     }).then((_) {
       setState(() {
-        // _visibleEvents = _events;
         _visibleHolidays = holidays;
         _controller = AnimationController(
           vsync: this,
@@ -68,20 +59,13 @@ class _CalendarScreen extends State<CalendarScreen>
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {
     setState(() {
+      // Update year in Events, when the year changes in the calendar.
       year = first.year;
 
       // Get namedays from database when changing visibility.
       Events(year: year).nameDays().then((data) {
         _events = data;
       }).then((_) {
-        // _visibleEvents = Map.fromEntries(
-        //   _events.entries.where(
-        //     (entry) =>
-        //         entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-        //         entry.key.isBefore(last.add(const Duration(days: 1))),
-        //   ),
-        // );
-
         _visibleHolidays = Map.fromEntries(
           holidays.entries.where(
             (entry) =>
@@ -90,14 +74,21 @@ class _CalendarScreen extends State<CalendarScreen>
           ),
         );
       });
-
-      // Update year in Events, when the year changes in the calendar.
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        //transparent Appbar
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        // leading: Icon(Icons.settings, color: Colors.black, ),
+        actions: <Widget>[
+          _buildBackToTodayButton(),
+        ],
+      ),
       body: (_loading != false)
           ? CircularProgressIndicator()
           : Column(
@@ -122,6 +113,7 @@ class _CalendarScreen extends State<CalendarScreen>
     return TableCalendar(
       locale: 'en_US',
       events: _events,
+      selectedDay: _selectedDay,
       holidays: _visibleHolidays,
       initialCalendarFormat: CalendarFormat.month,
       formatAnimation: FormatAnimation.slide,
@@ -237,6 +229,19 @@ class _CalendarScreen extends State<CalendarScreen>
       Icons.add_box,
       size: 20.0,
       color: Colors.blueGrey[800],
+    );
+  }
+
+  Widget _buildBackToTodayButton() {
+    return FlatButton(
+      child: Text("Today"),
+      color: Colors.transparent,
+      onPressed: () {
+        final _today = DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
+        _onDaySelected(_today, _events[_today]);
+        _controller.forward(from: 0.0);
+      },
     );
   }
 }
