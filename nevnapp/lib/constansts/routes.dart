@@ -1,3 +1,3 @@
 class ROUTES {
-  static const settings = "/settings";
+  static const SETTINGS = "/settings";
 }
