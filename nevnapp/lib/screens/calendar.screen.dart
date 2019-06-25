@@ -254,7 +254,7 @@ class _CalendarScreen extends State<CalendarScreen>
       icon: Icon(Icons.settings),
       color: Colors.grey,
       onPressed: () {
-        Navigator.pushNamed(context, ROUTES.settings);
+        Navigator.pushNamed(context, ROUTES.SETTINGS);
       },
     );
   }
