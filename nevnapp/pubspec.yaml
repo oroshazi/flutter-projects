@@ -29,6 +29,8 @@ dependencies:
   path: ^1.6.2
   flutter_bloc: ^0.18.2
   meta: ^1.1.6
+  scoped_model: ^1.0.1
+  rxdart: ^0.22.0
 
 dev_dependencies:
   flutter_test:
