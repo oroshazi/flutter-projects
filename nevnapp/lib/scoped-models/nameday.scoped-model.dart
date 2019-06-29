@@ -1,15 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:nevnapp/models/nameday.dart';
 import 'package:nevnapp/repository/repository_service_namedays.dart';
 
 class NamedayScopedModel {
-  AnimationController _controller;
-  Map<DateTime, List> _events;
-  Map<DateTime, List> _visibleHolidays;
-  DateTime _selectedDay;
-  List _selectedEvents;
   int _year;
-  bool _loading;
 
   Future<Map<DateTime, List<Nameday>>> get allNamedays async {
     final _nameDays = await RepositoryServiceNamedays.getAll();
