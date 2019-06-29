@@ -35,6 +35,7 @@ class _CalendarScreen extends State<CalendarScreen>
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {
     bloc.visibleDaysChangeSink.add(VisibleYearChanged(last.year));
+    bloc.selectedDayChangeSink.add(last);
   }
 
   @override
@@ -97,7 +98,6 @@ class _CalendarScreen extends State<CalendarScreen>
                   DateTime.now().month, DateTime.now().day));
             } else {
               selectedDay = date.data;
-              print("selectedDAy" + selectedDay.toString());
             }
             return TableCalendar(
               locale: 'en_US',
