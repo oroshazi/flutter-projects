@@ -104,7 +104,7 @@ class _CalendarScreen extends State<CalendarScreen>
                   ),
                   headerStyle: HeaderStyle(
                     centerHeaderTitle: true,
-                    formatButtonVisible: false,
+                    formatButtonVisible: true,
                   ),
                   builders: CalendarBuilders(
                     selectedDayBuilder: (context, date, _) {

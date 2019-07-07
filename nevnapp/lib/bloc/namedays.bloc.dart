@@ -43,6 +43,9 @@ class NamedaysBloc {
     }
     if (event is ToggleFavorite) {
       _handleToggleFavorite(event);
+      if (event.isOnFavoriteScreen) {
+        _fetch();
+      }
     }
   }
 
@@ -83,8 +86,6 @@ class NamedaysBloc {
     mappedSelectedDay = {key: nameDayList[key]};
     _selectedNamedaySubject.sink.add(mappedSelectedDay);
     db.rawUpdate(sql, params);
-    // this.namedayEventSink.add(VisibleYearChanged(event.nameday.year));
-    // _fetch();
   }
 
   _fetch({int year = 2019}) async {
