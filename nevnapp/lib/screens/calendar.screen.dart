@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nevnapp/bloc/namedays.bloc.dart';
 import 'package:nevnapp/constansts/routes.dart';
 import 'package:nevnapp/data/events.data.dart';
 import 'package:nevnapp/data/holidays.data.dart';
@@ -23,6 +24,8 @@ class _CalendarScreen extends State<CalendarScreen>
   int year;
   bool _loading;
   Map<DateTime, List> holidays = Holidays().holidayList;
+
+  final bloc = NamedaysBloc();
 
   @override
   void initState() {
@@ -114,6 +117,10 @@ class _CalendarScreen extends State<CalendarScreen>
 
   // More advanced TableCalendar configuration (using Builders & Styles)
   Widget _buildTableCalendarWithBuilders() {
+    // return StreamBuilder(
+    //     // stream: bloc.,
+    //     );
+
     return TableCalendar(
       locale: 'en_US',
       events: _events,
