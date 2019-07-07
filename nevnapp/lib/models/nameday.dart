@@ -2,18 +2,27 @@ import 'package:flutter/foundation.dart';
 import '../repository/database_creator.dart';
 
 class Nameday {
+  int year;
   int id;
   int day;
   int month;
   int isFavorite;
   String name;
 
-  Nameday(
-      {@required this.id,
-      @required this.isFavorite,
-      @required this.day,
-      @required this.month,
-      @required this.name});
+  Nameday({
+    this.year,
+    @required this.id,
+    @required this.isFavorite,
+    @required this.day,
+    @required this.month,
+    @required this.name,
+  }) {
+    this.year = DateTime.now().year;
+  }
+
+  set setYear(int newYear) {
+    this.year = newYear;
+  }
 
   Nameday.fromJSON(Map<String, dynamic> json) {
     this.id = json[DatabaseCreator.id];
@@ -37,6 +46,7 @@ class Nameday {
     print('id: ${this.id}' +
         " day: ${this.day}" +
         " month: ${this.month}" +
-        " name: ${this.name}");
+        " name: ${this.name}" +
+        " isFavorite: ${this.isFavorite}");
   }
 }

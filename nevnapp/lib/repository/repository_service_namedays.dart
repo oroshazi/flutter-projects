@@ -25,6 +25,6 @@ class RepositoryServiceNamedays {
     List<dynamic> params = [nameDay.isFavorite == 1 ? 0 : 1, nameDay.name];
     final result = await db.rawUpdate(sql, params);
 
-    DatabaseCreator.databaseLog('Update todo', sql, null, result, params);
+    // DatabaseCreator.databaseLog('Update todo', sql, null, result, params);
   }
 }
