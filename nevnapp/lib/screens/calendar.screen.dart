@@ -53,29 +53,34 @@ class _CalendarScreen extends State<CalendarScreen>
         body: StreamBuilder(
           stream: bloc.selectedEvents,
           builder: (context, AsyncSnapshot<List<dynamic>> selectedEvents) {
-            return StreamBuilder(
-              stream: bloc.visibleYear,
-              builder: (context, AsyncSnapshot<int> year) {
-                if (year.hasData) {
+              if (selectedEvents.hasData) {
+                selectedEvents.data[0].printOut();
+              }
+            // return StreamBuilder(
+            //   stream: bloc.visibleYear,
+            //   builder: (context, AsyncSnapshot<int> year) {
+            //     if (year.hasData) {
+                  // print(selectedEvents.data[0].isFavorite);
                   return Column(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Flexible(
                           child: Center(
                         child: EventList(
-                          selectedEvents: selectedEvents.data ?? [],
-                          selectedYear: year.data,
+                          selectedEvents:
+                              selectedEvents.hasData ? selectedEvents.data : [],
+                          selectedYear: DateTime.now().year,
                         ),
                       )),
                       _streamingBody(context),
                       const SizedBox(height: 8.0),
                     ],
                   );
-                } else {
-                  return CircularProgressIndicator();
-                }
-              },
-            );
+                // } else {
+                //   return CircularProgressIndicator();
+            //     }
+            //   },
+            // );
           },
         ));
   }
@@ -84,6 +89,7 @@ class _CalendarScreen extends State<CalendarScreen>
     return StreamBuilder(
       stream: bloc.allNameday,
       builder: (context, AsyncSnapshot<Map<DateTime, List<Nameday>>> list) {
+        print("rebuild table thing");
         if (!list.hasData) {
           return CircularProgressIndicator();
         }

@@ -6,73 +6,83 @@ import 'package:nevnapp/repository/database_creator.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NamedaysBloc {
-  int _year;
-  List<Nameday> nameDaysHu = List();
-  Map<DateTime, List<Nameday>> nameDayList = Map<DateTime, List<Nameday>>();
-
-  final _visibleYearSubject = BehaviorSubject<int>();
-  final _selectedEventSubject = BehaviorSubject<List>();
   final _allNamedaysSubject = BehaviorSubject<Map<DateTime, List<Nameday>>>();
-  final _selectedDaySubject = BehaviorSubject<DateTime>();
-  final _selectedDayController = StreamController<DateTime>();
-  final _visibleDaysController = StreamController<NamedayEvent>();
-
-  Observable<Map<DateTime, List<Nameday>>> get allNameday =>
+  Observable<Map<DateTime, List<Nameday>>> get allNamedays =>
       _allNamedaysSubject.stream;
-  Observable<DateTime> get selectedDay => _selectedDaySubject.stream;
-  Observable<List> get selectedEvents => _selectedEventSubject.stream;
-  Observable<int> get visibleYear => _visibleYearSubject.stream;
-
-  Sink<DateTime> get selectedDayChangeSink => _selectedDayController.sink;
-  Sink<NamedayEvent> get visibleDaysChangeSink => _visibleDaysController.sink;
 
   NamedaysBloc() {
-    _year = DateTime.now().year;
-    _visibleYearSubject.sink.add(DateTime.now().year);
     _fetch();
-    _selectedDayController.stream.listen(_handleSelectedDayChange);
-    _visibleDaysController.stream.listen(_handleVisibleDayChange);
   }
 
   dispose() {
     _allNamedaysSubject.close();
-    _selectedDaySubject.close();
-    _visibleYearSubject.close();
-    _selectedEventSubject.close();
-    _selectedDayController.close();
-    _visibleDaysController.close();
-  }
-
-  _handleSelectedDayChange(DateTime newSelectedDate) {
-    _selectedDaySubject.sink.add(newSelectedDate);
-    _selectedEventSubject.sink.add(nameDayList[newSelectedDate]);
   }
 
   _handleVisibleDayChange(NamedayEvent event) {
     if (event is VisibleYearChanged) {
-      _year = event.year;
-      // TODO: check if year was changed.
-      _visibleYearSubject.sink.add(event.year);
-
-      for (final i in nameDaysHu) {
-        final nameDay = Nameday.fromJSON(i.toMap());
-
-        nameDayList[DateTime(event.year, nameDay.month, nameDay.day)] = [
-          Nameday(
-              day: nameDay.day,
-              month: nameDay.month,
-              name: nameDay.name,
-              id: nameDay.id,
-              isFavorite: nameDay.isFavorite)
-        ];
-      }
-      _allNamedaysSubject.sink.add(nameDayList);
+      _handleVisibleYearChanged(event);
     }
+    if (event is ToggleFavorite) {
+      _handleToggleFavorite(event);
+    }
+  }
 
-    if (event is SelectedEventChange) {}
+  _handleVisibleYearChanged(VisibleYearChanged event) {
+    //   // _year = event.year;
+    //   // TODO: check if year was changed.
+    //   _visibleYearSubject.sink.add(event.year);
+
+    //   for (final i in nameDaysHu) {
+    //     final nameDay = Nameday.fromJSON(i.toMap());
+
+    //     nameDayList[DateTime(event.year, nameDay.month, nameDay.day)] = [
+    //       Nameday(
+    //           day: nameDay.day,
+    //           month: nameDay.month,
+    //           name: nameDay.name,
+    //           id: nameDay.id,
+    //           isFavorite: nameDay.isFavorite)
+    //     ];
+    //   }
+    //   _allNamedaysSubject.sink.add(nameDayList);
+  }
+
+  _handleToggleFavorite(ToggleFavorite event) {
+    //   DateTime key = nameDayList.keys.firstWhere(
+    //       (name) => nameDayList[name][0].name == event.nameday.name,
+    //       orElse: () => null);
+
+    //   final sql = '''UPDATE ${DatabaseCreator.nameDayTableHu}
+    //                 SET ${DatabaseCreator.isFavorite} = ?
+    //                 WHERE ${DatabaseCreator.name} = ?
+    //                 ''';
+
+    //   List<dynamic> params = [
+    //     event.nameday.isFavorite == 1 ? 0 : 1,
+    //     event.nameday.name
+    //   ];
+
+    //   event.nameday.isFavorite = event.nameday.isFavorite == 1 ? 0 : 1;
+
+    //   nameDayList[key] = [
+    //     Nameday(
+    //         day: event.nameday.day,
+    //         month: event.nameday.month,
+    //         name: event.nameday.name,
+    //         id: event.nameday.id,
+    //         isFavorite: event.nameday.isFavorite)
+    //   ];
+
+    //   _selectedEventSubject.sink.add(nameDayList[key]);
+    //   _allNamedaysSubject.sink.add(nameDayList);
+    //   db.rawUpdate(sql, params);
   }
 
   _fetch() async {
+    List<Nameday> nameDaysHu; 
+    Map<DateTime, List<Nameday>> nameDayList; 
+
+    print("fetch fired");
     final sql = '''SELECT * FROM ${DatabaseCreator.nameDayTableHu}''';
 
     final data = await db.rawQuery(sql);
@@ -85,7 +95,7 @@ class NamedaysBloc {
     for (final i in nameDaysHu) {
       final nameDay = Nameday.fromJSON(i.toMap());
 
-      nameDayList[DateTime(_year, nameDay.month, nameDay.day)] = [
+      nameDayList[DateTime(nameDay.year, nameDay.month, nameDay.day)] = [
         Nameday(
             day: nameDay.day,
             month: nameDay.month,

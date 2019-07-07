@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nevnapp/bloc/namedays_bloc.dart';
 import 'package:nevnapp/models/nameday.dart';
+import 'package:nevnapp/models/nameday.event.dart';
 import 'package:nevnapp/repository/repository_service_namedays.dart';
 
 class EventItem extends StatelessWidget {
@@ -9,15 +11,14 @@ class EventItem extends StatelessWidget {
 
   EventItem({this.event, this.year});
 
+  final bloc = NamedaysBloc();
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Icon(
-          event.isFavorite == 0 ? Icons.favorite_border : Icons.favorite,
-          size: 40,
-          color: Colors.red,
-        ),
+        leading: event.isFavorite == 1
+            ? Icon(Icons.favorite)
+            : Icon(Icons.favorite_border),
         subtitle: Text(formatDateTime(DateTime(year, event.month, event.day))),
         title: Text(
           event.name.toString(),
@@ -25,7 +26,7 @@ class EventItem extends StatelessWidget {
           textAlign: TextAlign.justify,
         ),
         onTap: () {
-          RepositoryServiceNamedays.toggleFavorite(event);
+          bloc.visibleDaysChangeSink.add(ToggleFavorite(event));
           print('${event.isFavorite} tapped!');
         },
       ),
