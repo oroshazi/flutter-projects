@@ -27,9 +27,6 @@ class Events {
       ];
       // nameDayList.add(nameDays);
     }
-
-    print(nameDayList);
-
     return nameDayList;
   }
 }

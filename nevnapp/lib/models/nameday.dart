@@ -19,7 +19,7 @@ class Nameday {
   });
 
   set setYear(int newYear) {
-    this.year = newYear;
+    year = newYear;
   }
 
   Nameday.fromJSON(Map<String, dynamic> json) {
