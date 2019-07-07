@@ -13,11 +13,6 @@ class ToggleFavorite extends NamedayEvent {
   ToggleFavorite(this.nameday, {this.isOnFavoriteScreen = false});
 }
 
-class ToggleFavoriteInFavoriteScreen extends ToggleFavorite  {
-  final Nameday nameday;
-  ToggleFavoriteInFavoriteScreen(this.nameday) : super(null);
-}
-
 class SelectedDayChanged extends NamedayEvent {
   final DateTime selectedDay;
   SelectedDayChanged(this.selectedDay);
