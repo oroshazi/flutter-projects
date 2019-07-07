@@ -3,10 +3,10 @@ import 'package:nevnapp/widgets/event_item.widget.dart';
 
 class EventList extends StatelessWidget {
   final List<dynamic> selectedEvents;
-  final int selectedYear;
+  // final int selectedYear;
   final bloc; 
 
-  EventList({this.selectedEvents, this.selectedYear, this.bloc});
+  EventList({this.selectedEvents, this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class EventList extends StatelessWidget {
             ? selectedEvents
                 .map((event) => EventItem(
                       event: event,
-                      year: selectedYear,
+                      year: event.year,
                       bloc: bloc
                     ))
                 .toList()

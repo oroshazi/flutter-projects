@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:nevnapp/bloc/namedays.bloc.dart';
 import 'package:nevnapp/models/nameday.dart';
 import 'package:nevnapp/models/nameday.event.dart';
-import 'package:nevnapp/repository/repository_service_namedays.dart';
 
 class EventItem extends StatelessWidget {
   final Nameday event;

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nevnapp/bloc/namedays.bloc.dart';
 import 'package:nevnapp/constansts/routes.dart';
-import 'package:nevnapp/data/events.data.dart';
-import 'package:nevnapp/data/holidays.data.dart';
 import 'package:nevnapp/models/nameday.dart';
 import 'package:nevnapp/models/nameday.event.dart';
 import 'package:nevnapp/widgets/event_list.widget.dart';
@@ -18,14 +16,7 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreen extends State<CalendarScreen>
     with TickerProviderStateMixin {
-  DateTime _selectedDay;
-  Map<DateTime, List> _events;
-  Map<DateTime, List> _visibleHolidays;
-  List _selectedEvents;
   AnimationController _controller;
-  int year;
-  bool _loading;
-  Map<DateTime, List> holidays = Holidays().holidayList;
 
   final bloc = NamedaysBloc();
 
@@ -33,57 +24,17 @@ class _CalendarScreen extends State<CalendarScreen>
   void initState() {
     super.initState();
 
-    _loading = true;
-    year = DateTime.now().year;
-    _selectedDay =
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-
-    Events(year: year).nameDays().then((data) {
-      _events = data;
-      _selectedEvents = _events[_selectedDay];
-    }).then((_) {
-      setState(() {
-        _visibleHolidays = holidays;
-        _controller = AnimationController(
-          vsync: this,
-          duration: const Duration(milliseconds: 400),
-        );
-        _controller.forward();
-      });
-    }).then((_) {
-      _loading = false;
-    });
-  }
-
-  void _onDaySelected(DateTime day, List events) {
-    bloc.namedayEventSink.add(SelectedDayChanged(day));
-    // bloc.namedayEventSink.add(SelectedDayChanged(day));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _controller.forward();
   }
 
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {
     bloc.namedayEventSink.add(VisibleYearChanged(first.year));
-
-    // TODO:Think of a better solution
     bloc.namedayEventSink.add(SelectedDayChanged(last));
-    setState(() {
-      // Update year in Events, when the year changes in the calendar.
-      year = first.year;
-      // _selectedDay = last;
-
-      // Get namedays from database when changing visibility.
-      Events(year: year).nameDays().then((data) {
-        _events = data;
-      }).then((_) {
-        _visibleHolidays = Map.fromEntries(
-          holidays.entries.where(
-            (entry) =>
-                entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-                entry.key.isBefore(last.add(const Duration(days: 1))),
-          ),
-        );
-      });
-    });
   }
 
   @override
@@ -109,13 +60,9 @@ class _CalendarScreen extends State<CalendarScreen>
     return StreamBuilder(
       stream: bloc.selectedNameday,
       builder: (context, AsyncSnapshot<Map<DateTime, List<Nameday>>> snapshot) {
-        print("REBUILD EVENTLISt");
         if (snapshot.hasData) {
           return EventList(
-            selectedEvents: snapshot.data.values.toList().first,
-            selectedYear: year,
-            bloc: bloc
-          );
+              selectedEvents: snapshot.data.values.toList().first, bloc: bloc);
         } else {
           return Card();
         }
@@ -133,14 +80,12 @@ class _CalendarScreen extends State<CalendarScreen>
             stream: bloc.selectedNameday,
             builder: (context,
                 AsyncSnapshot<Map<DateTime, List<Nameday>>> selectedEvent) {
-              // print("first nameday: " + selectedEvent.data.values.toList().first[0].isFavorite.toString());
-              // print("first: " + selectedEvent.data.keys.toList().first.toString());
               if (selectedEvent.hasData) {
                 return TableCalendar(
                   locale: 'en_US',
                   events: snapshot.data,
                   selectedDay: selectedEvent.data.keys.toList().first,
-                  holidays: _visibleHolidays,
+                  // holidays: _visibleHolidays,
                   initialCalendarFormat: CalendarFormat.month,
                   formatAnimation: FormatAnimation.slide,
                   startingDayOfWeek: StartingDayOfWeek.monday,
@@ -237,27 +182,38 @@ class _CalendarScreen extends State<CalendarScreen>
   }
 
   Widget _buildEventsMarker(DateTime date, List events) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Utils.isSameDay(date, _selectedDay)
-            ? Colors.brown[500]
-            : Utils.isSameDay(date, DateTime.now())
-                ? Colors.brown[300]
-                : Colors.blue[400],
-      ),
-      width: 16.0,
-      height: 16.0,
-      child: Center(
-        child: Text(
-          '${events[0].isFavorite}',
-          style: TextStyle().copyWith(
-            color: Colors.white,
-            fontSize: 12.0,
-          ),
-        ),
-      ),
+    return StreamBuilder(
+      stream: bloc.selectedNameday,
+      builder: (BuildContext context,
+          AsyncSnapshot<Map<DateTime, List<Nameday>>> snapshot) {
+        if (snapshot.data != null) {
+          return Container(
+              child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Utils.isSameDay(date, snapshot.data.keys.toList().first)
+                  ? Colors.brown[500]
+                  : Utils.isSameDay(date, DateTime.now())
+                      ? Colors.brown[300]
+                      : Colors.blue[400],
+            ),
+            width: 16.0,
+            height: 16.0,
+            child: Center(
+              child: Text(
+                '${events[0].isFavorite}',
+                style: TextStyle().copyWith(
+                  color: Colors.white,
+                  fontSize: 12.0,
+                ),
+              ),
+            ),
+          ));
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
@@ -291,5 +247,4 @@ class _CalendarScreen extends State<CalendarScreen>
       },
     );
   }
-  
 }
