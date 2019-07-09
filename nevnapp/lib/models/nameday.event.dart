@@ -9,7 +9,7 @@ class VisibleYearChanged extends NamedayEvent {
 
 class ToggleFavorite extends NamedayEvent {
   final Nameday nameday;
-  final isOnFavoriteScreen; 
+  final isOnFavoriteScreen;
   ToggleFavorite(this.nameday, {this.isOnFavoriteScreen = false});
 }
 
@@ -17,3 +17,5 @@ class SelectedDayChanged extends NamedayEvent {
   final DateTime selectedDay;
   SelectedDayChanged(this.selectedDay);
 }
+
+class GetAllFavorites extends NamedayEvent {}

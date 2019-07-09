@@ -8,6 +8,8 @@ import 'package:rxdart/rxdart.dart';
 class NamedaysBloc {
   List<Nameday> nameDaysHu = List();
   Map<DateTime, List<Nameday>> nameDayList = Map<DateTime, List<Nameday>>();
+  Map<DateTime, List<Nameday>> favoriteNamedayList =
+      Map<DateTime, List<Nameday>>();
 
   final _allNamedaysSubject = BehaviorSubject<Map<DateTime, List<Nameday>>>();
   Observable<Map<DateTime, List<Nameday>>> get allNamedays =>
@@ -18,19 +20,24 @@ class NamedaysBloc {
   Observable<Map<DateTime, List<Nameday>>> get selectedNameday =>
       _selectedNamedaySubject.stream;
 
+  final _allFavoritedNamedaysSubject =
+      BehaviorSubject<Map<DateTime, List<Nameday>>>();
+  Observable<Map<DateTime, List<Nameday>>> get allFavotitedNamedays =>
+      _allFavoritedNamedaysSubject.stream;
+
   Sink<NamedayEvent> get namedayEventSink => _namedayEventController.sink;
   final _namedayEventController = StreamController<NamedayEvent>();
 
   NamedaysBloc() {
     _fetch();
     _handleSelectedDayChanged(DateTime.now());
-    // _selectedNamedaySubject.sink.add(nameDayList[DateTime.now()]);
     _namedayEventController.stream.listen(_handle);
   }
 
   dispose() {
     _allNamedaysSubject.close();
     _selectedNamedaySubject.close();
+    _allFavoritedNamedaysSubject.close();
     _namedayEventController.close();
   }
 
@@ -47,6 +54,35 @@ class NamedaysBloc {
         _fetch();
       }
     }
+    if (event is GetAllFavorites) {
+      _handleGetAllFavorites();
+    }
+  }
+
+  _handleGetAllFavorites({int year = 2019}) async {
+    final sql = '''SELECT * FROM ${DatabaseCreator.nameDayTableHu}
+                    WHERE ${DatabaseCreator.isFavorite} = ?
+                    ''';
+
+    List<dynamic> params = [1];
+
+    final data = await db.rawQuery(sql, params);
+
+    for (final node in data) {
+      print(node);
+      final nameDay = Nameday.fromJSON(node);
+      favoriteNamedayList[DateTime(year, nameDay.month, nameDay.day)] = [
+        Nameday(
+            year: year,
+            day: nameDay.day,
+            month: nameDay.month,
+            name: nameDay.name,
+            id: nameDay.id,
+            isFavorite: nameDay.isFavorite)
+      ];
+    }
+
+    _allFavoritedNamedaysSubject.sink.add(favoriteNamedayList);
   }
 
   _handleSelectedDayChanged(DateTime date) {
@@ -73,6 +109,15 @@ class NamedaysBloc {
     ];
 
     event.nameday.isFavorite = event.nameday.isFavorite == 1 ? 0 : 1;
+    favoriteNamedayList[key] = [
+      Nameday(
+          year: event.nameday.year,
+          day: event.nameday.day,
+          month: event.nameday.month,
+          name: event.nameday.name,
+          id: event.nameday.id,
+          isFavorite: event.nameday.isFavorite)
+    ];
 
     nameDayList[key] = [
       Nameday(
@@ -85,6 +130,9 @@ class NamedaysBloc {
     ];
     mappedSelectedDay = {key: nameDayList[key]};
     _selectedNamedaySubject.sink.add(mappedSelectedDay);
+
+    _allFavoritedNamedaysSubject.sink.add(favoriteNamedayList);
+
     db.rawUpdate(sql, params);
   }
 

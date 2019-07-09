@@ -8,6 +8,7 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bloc.namedayEventSink.add(GetAllFavorites());
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.search),
@@ -21,7 +22,7 @@ class FavoritesScreen extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder(
-      stream: bloc.allNamedays,
+      stream: bloc.allFavotitedNamedays,
       // initialData: initialData ,
       builder: (BuildContext context,
           AsyncSnapshot<Map<DateTime, List<Nameday>>> snapshot) {
